@@ -25,7 +25,7 @@ export function AuditPage() {
 
   const fmtDate = (d: string) => new Date(d).toLocaleString('es-CO')
 
-  const tablas = ['usuario', 'bodega', 'zona', 'objeto', 'contrato', 'movimiento', 'acceso_persona']
+  const tablas = ['usuarios', 'bodegas', 'zonas', 'objetos', 'contratos', 'movimientos', 'accesos_personas']
 
   return (
     <Layout>

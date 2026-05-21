@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     usuario_id  UUID REFERENCES usuarios(id),
     accion      VARCHAR(50) NOT NULL,
     tabla       VARCHAR(100) NOT NULL,
-    registro_id BIGINT,
+    registro_id TEXT,
     datos_anteriores JSONB,
     datos_nuevos     JSONB,
     ip_origen   VARCHAR(45),
@@ -189,18 +189,22 @@ CREATE TRIGGER trg_contratos_after AFTER INSERT OR UPDATE ON contratos FOR EACH 
 CREATE OR REPLACE FUNCTION fn_audit_log()
 RETURNS TRIGGER AS $$
 DECLARE
-    registro_id_var BIGINT;
+    registro_id_var TEXT;
 BEGIN
-    registro_id_var := COALESCE(NEW.id, OLD.id);
+    registro_id_var := COALESCE(NEW.id::TEXT, OLD.id::TEXT);
     INSERT INTO audit_logs (accion, tabla, registro_id, datos_anteriores, datos_nuevos)
     VALUES (TG_OP, TG_TABLE_NAME, registro_id_var, to_jsonb(OLD), to_jsonb(NEW));
     RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TRIGGER trg_audit_usuarios AFTER INSERT OR UPDATE OR DELETE ON usuarios FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
 CREATE TRIGGER trg_audit_bodegas AFTER INSERT OR UPDATE OR DELETE ON bodegas FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
-CREATE TRIGGER trg_audit_contratos AFTER INSERT OR UPDATE OR DELETE ON contratos FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
+CREATE TRIGGER trg_audit_zonas AFTER INSERT OR UPDATE OR DELETE ON zonas FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
 CREATE TRIGGER trg_audit_objetos AFTER INSERT OR UPDATE OR DELETE ON objetos FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
+CREATE TRIGGER trg_audit_contratos AFTER INSERT OR UPDATE OR DELETE ON contratos FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
+CREATE TRIGGER trg_audit_movimientos AFTER INSERT OR UPDATE OR DELETE ON movimientos FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
+CREATE TRIGGER trg_audit_accesos AFTER INSERT OR UPDATE OR DELETE ON accesos_personas FOR EACH ROW EXECUTE FUNCTION fn_audit_log();
 
 -- ============================================================
 -- 4. RLS Y POLÍTICAS

@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "backend:compile": "JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.19/libexec/openjdk.jdk/Contents/Home mvn clean package -DskipTests",
+    "backend:run": "JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.19/libexec/openjdk.jdk/Contents/Home java -Dspring.profiles.active=local -jar target/gestion-0.0.1-SNAPSHOT.jar"
+  },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.0"

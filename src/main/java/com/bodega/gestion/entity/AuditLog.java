@@ -1,6 +1,5 @@
 package com.bodega.gestion.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -15,10 +14,8 @@ public class AuditLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    @JsonIgnore
-    private Usuario usuario;
+    @Column(name = "usuario_id")
+    private UUID usuarioId;
 
     @Column(nullable = false, length = 50)
     private String accion;
@@ -27,7 +24,7 @@ public class AuditLog {
     private String tabla;
 
     @Column(name = "registro_id")
-    private Long registroId;
+    private String registroId;
 
     @Column(name = "datos_anteriores", columnDefinition = "jsonb")
     private String datosAnteriores;
@@ -40,11 +37,6 @@ public class AuditLog {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-
-    @Transient
-    public UUID getUsuarioId() {
-        return usuario != null ? usuario.getId() : null;
-    }
 
     @PrePersist
     protected void onCreate() {
