@@ -8,6 +8,9 @@ import { BodegasPage } from './pages/admin/BodegasPage'
 import { ContratosPage } from './pages/admin/ContratosPage'
 import { AuditPage } from './pages/admin/AuditPage'
 import { ClienteDashboard } from './pages/cliente/ClienteDashboard'
+import { ClienteObjetosPage } from './pages/cliente/ClienteObjetosPage'
+import { ClienteMovimientosPage } from './pages/cliente/ClienteMovimientosPage'
+import { ClienteBodegasPage } from './pages/cliente/ClienteBodegasPage'
 import { SeguridadDashboard } from './pages/seguridad/SeguridadDashboard'
 import './styles/global.css'
 
@@ -69,6 +72,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <ClienteDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cliente/objetos"
+            element={
+              <ProtectedRoute>
+                <ClienteObjetosPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cliente/movimientos"
+            element={
+              <ProtectedRoute>
+                <ClienteMovimientosPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cliente/bodegas"
+            element={
+              <ProtectedRoute>
+                <ClienteBodegasPage />
               </ProtectedRoute>
             }
           />

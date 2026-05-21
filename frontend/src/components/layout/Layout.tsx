@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts'
-import { LogOut, Warehouse, User, Shield } from 'lucide-react'
+import { LogOut, Warehouse, User, Shield, FileText, ClipboardList } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -57,10 +57,10 @@ export function Layout({ children }: LayoutProps) {
                   <Warehouse size={16} /> Bodegas
                 </Link>
                 <Link to="/admin/contratos" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
-                  Contratos
+                  <FileText size={16} /> Contratos
                 </Link>
                 <Link to="/admin/audit" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
-                  Auditoría
+                  <ClipboardList size={16} /> Auditoría
                 </Link>
               </>
             )}
@@ -75,7 +75,7 @@ export function Layout({ children }: LayoutProps) {
               </Link>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-              <User size={16} />
+              <User size={16} color="var(--primary)" />
               {perfil?.nombreCompleto || perfil?.email}
               <span
                 className={`badge ${isAdmin ? 'badge-danger' : isSeguridad ? 'badge-warning' : 'badge-info'}`}

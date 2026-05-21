@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts'
 import { Layout } from '../../components/layout/Layout'
 import { dashboardApi } from '../../api/services'
@@ -76,9 +77,9 @@ export function ClienteDashboard() {
           Accesos rápidos
         </h2>
         <div className="grid grid-3">
-          <a href="/cliente/objetos" className="btn btn-primary">Mis Objetos</a>
-          <a href="/cliente/movimientos" className="btn btn-secondary">Movimientos</a>
-          <a href="/cliente/bodegas" className="btn btn-secondary">Mis Bodegas</a>
+          <Link to="/cliente/objetos" className="btn btn-primary">Mis Objetos</Link>
+          <Link to="/cliente/movimientos" className="btn btn-secondary">Movimientos</Link>
+          <Link to="/cliente/bodegas" className="btn btn-secondary">Mis Bodegas</Link>
         </div>
       </div>
     </Layout>

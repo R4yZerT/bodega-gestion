@@ -101,7 +101,7 @@ export interface AuditLog {
   usuarioId: string | null
   accion: string
   tabla: string
-  registroId: number | null
+  registroId: string | null
   datosAnteriores: string | null
   datosNuevos: string | null
   ipOrigen: string | null
