@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Layout } from '../../components/layout/Layout'
 import { contratoApi, bodegaApi } from '../../api/services'
-import type { Contrato, Bodega } from '../../types'
+import type { ContratoResponse, Bodega } from '../../types'
 import { FileText, Plus } from 'lucide-react'
 
 export function ContratosPage() {
-  const [contratos, setContratos] = useState<Contrato[]>([])
+  const [contratos, setContratos] = useState<ContratoResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({

@@ -3,8 +3,10 @@ import type {
   Bodega,
   Zona,
   Objeto,
-  Movimiento,
+  ObjetoResponse,
+  MovimientoResponse,
   Contrato,
+  ContratoResponse,
   Categoria,
   AccesoPersona,
   Usuario,
@@ -49,11 +51,11 @@ export const zonaApi = {
 // Objetos
 // ============================
 export const objetoApi = {
-  misObjetos: () => api.get<Objeto[]>('/objetos/mis-objetos'),
-  porBodega: (bodegaId: number) => api.get<Objeto[]>(`/objetos/bodega/${bodegaId}`),
-  alertasStock: () => api.get<Objeto[]>('/objetos/alertas-stock'),
-  crear: (data: Partial<Objeto>) => api.post<Objeto>('/objetos', data),
-  actualizar: (id: number, data: Partial<Objeto>) => api.put<Objeto>(`/objetos/${id}`, data),
+  misObjetos: () => api.get<ObjetoResponse[]>('/objetos/mis-objetos'),
+  porBodega: (bodegaId: number) => api.get<ObjetoResponse[]>(`/objetos/bodega/${bodegaId}`),
+  alertasStock: () => api.get<ObjetoResponse[]>('/objetos/alertas-stock'),
+  crear: (data: Partial<Objeto>) => api.post<ObjetoResponse>('/objetos', data),
+  actualizar: (id: number, data: Partial<Objeto>) => api.put<ObjetoResponse>(`/objetos/${id}`, data),
   eliminar: (id: number) => api.delete(`/objetos/${id}`),
 }
 
@@ -61,20 +63,22 @@ export const objetoApi = {
 // Movimientos
 // ============================
 export const movimientoApi = {
-  registrar: (data: Partial<Movimiento>) => api.post<Movimiento>('/movimientos', data),
-  porBodega: (bodegaId: number) => api.get<Movimiento[]>(`/movimientos/bodega/${bodegaId}`),
-  porObjeto: (objetoId: number) => api.get<Movimiento[]>(`/movimientos/objeto/${objetoId}`),
+  registrar: (data: { tipo: string; objetoId: number; cantidad: number; observaciones?: string }) =>
+    api.post<MovimientoResponse>('/movimientos', data),
+  porBodega: (bodegaId: number) => api.get<MovimientoResponse[]>(`/movimientos/bodega/${bodegaId}`),
+  porObjeto: (objetoId: number) => api.get<MovimientoResponse[]>(`/movimientos/objeto/${objetoId}`),
 }
 
 // ============================
 // Contratos
 // ============================
 export const contratoApi = {
-  listarTodos: () => api.get<Contrato[]>('/contratos'),
+  listarTodos: () => api.get<ContratoResponse[]>('/contratos'),
+  misContratos: () => api.get<ContratoResponse[]>('/contratos/mis-contratos'),
   proximosAVencer: (dias: number = 30) =>
-    api.get<Contrato[]>('/contratos/proximos-vencer', { params: { dias } }),
-  crear: (data: Partial<Contrato>) => api.post<Contrato>('/contratos', data),
-  terminar: (id: number) => api.patch<Contrato>(`/contratos/${id}/terminar`),
+    api.get<ContratoResponse[]>('/contratos/proximos-vencer', { params: { dias } }),
+  crear: (data: Partial<Contrato>) => api.post<ContratoResponse>('/contratos', data),
+  terminar: (id: number) => api.patch<ContratoResponse>(`/contratos/${id}/terminar`),
 }
 
 // ============================

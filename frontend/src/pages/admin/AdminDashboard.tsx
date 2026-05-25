@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts'
 import { Layout } from '../../components/layout/Layout'
 import { dashboardApi } from '../../api/services'
 import type { DashboardAdmin } from '../../types'
-import { Warehouse, TrendingUp, Users, AlertCircle } from 'lucide-react'
+import { Warehouse, TrendingUp, DollarSign, Users, AlertCircle, Package } from 'lucide-react'
 
 export function AdminDashboard() {
   const { perfil } = useAuth()
@@ -76,7 +76,59 @@ export function AdminDashboard() {
           </div>
           <div className="stat-value">{data.ocupacionGlobalPorcentaje?.toFixed(1) ?? 0}%</div>
         </div>
+
+        <div className="stat-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <DollarSign size={20} color="var(--success)" />
+            <span className="stat-label">Ingresos Mensuales</span>
+          </div>
+          <div className="stat-value text-success">${(data.ingresosMensuales || 0).toLocaleString('es-CO')}</div>
+        </div>
+
+        <div className="stat-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Users size={20} color="var(--primary)" />
+            <span className="stat-label">Clientes Activos</span>
+          </div>
+          <div className="stat-value">{data.clientesActivos || 0}</div>
+        </div>
+
+        <div className="stat-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Package size={20} color="var(--warning)" />
+            <span className="stat-label">Reservadas</span>
+          </div>
+          <div className="stat-value text-warning">{data.bodegasReservadas}</div>
+        </div>
       </div>
+
+      {data.topProductos && data.topProductos.length > 0 && (
+        <div className="card mt-3">
+          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>
+            Productos que más espacio ocupan
+          </h2>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Producto</th><th>Bodega</th><th>Cant.</th><th>Vol. (m³)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.topProductos.map((p, i) => (
+                  <tr key={p.id}>
+                    <td>{i + 1}</td>
+                    <td>{p.nombre}</td>
+                    <td>{p.bodegaNombre}</td>
+                    <td>{p.cantidad}</td>
+                    <td>{p.volumenTotalM3?.toFixed(4) || '0'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       <div className="card mt-3">
         <h2 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>

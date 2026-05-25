@@ -17,6 +17,21 @@ const estadoLabels: Record<string, string> = {
   EN_USO: 'En Uso',
 }
 
+function BarraOcupacion({ porcentaje }: { porcentaje: number }) {
+  const p = Math.min(100, Math.max(0, porcentaje || 0));
+  return (
+    <div style={{ background: '#e5e7eb', borderRadius: 4, height: 12, width: '100%', marginTop: '4px' }}>
+      <div style={{
+        width: `${p}%`,
+        height: '100%',
+        background: p > 90 ? '#ef4444' : p > 70 ? '#f59e0b' : '#22c55e',
+        borderRadius: 4,
+        transition: 'width 0.3s ease'
+      }} />
+    </div>
+  )
+}
+
 export function BodegasPage() {
   const [bodegas, setBodegas] = useState<Bodega[]>([])
   const [loading, setLoading] = useState(true)
@@ -111,20 +126,23 @@ export function BodegasPage() {
             <table>
               <thead>
                 <tr>
-                  <th>ID</th><th>Nombre</th><th>Ubicación</th><th>Capacidad</th><th>Ocupado</th><th>%</th><th>Estado</th><th>Acciones</th>
+                  <th>ID</th><th>Nombre</th><th>Ubicación</th><th>Capacidad</th><th>Ocupado</th><th style={{ minWidth: '100px' }}>%</th><th>Estado</th><th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {bodegas.length === 0 ? (
                   <tr><td colSpan={8} className="text-secondary" style={{ textAlign: 'center' }}>No hay bodegas</td></tr>
                 ) : bodegas.map(b => (
-                  <tr key={b.id}>
+                  <tr key={b.id} style={{ background: (b.porcentajeOcupacion || 0) > 90 ? '#fef2f2' : 'inherit' }}>
                     <td>{b.id}</td>
                     <td>{b.nombre}</td>
                     <td>{b.ubicacion}</td>
                     <td>{b.capacidadM3} m³</td>
                     <td>{b.volumenOcupadoM3?.toFixed(2) ?? 0} m³</td>
-                    <td>{b.porcentajeOcupacion?.toFixed(1) ?? 0}%</td>
+                    <td>
+                      <div>{b.porcentajeOcupacion?.toFixed(1) ?? 0}%</div>
+                      <BarraOcupacion porcentaje={b.porcentajeOcupacion || 0} />
+                    </td>
                     <td><span className={`badge ${estadoColors[b.estado] || 'badge-info'}`}>{estadoLabels[b.estado] || b.estado}</span></td>
                     <td>
                       <button className="btn btn-danger btn-sm" onClick={() => handleDelete(b.id)}>Eliminar</button>

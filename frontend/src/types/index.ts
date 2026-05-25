@@ -39,6 +39,22 @@ export interface Zona {
 
 export type TipoMovimiento = 'ENTRADA' | 'SALIDA'
 
+export interface ObjetoResponse {
+  id: number
+  nombre: string
+  cantidad: number
+  largoCm: number | null
+  anchoCm: number | null
+  altoCm: number | null
+  volumenTotalM3: number
+  stockMinimo: number | null
+  bajoStockMinimo: boolean
+  categoriaNombre: string | null
+  bodegaId: number
+  bodegaNombre: string
+  createdAt: string
+}
+
 export interface Objeto {
   id: number
   nombre: string
@@ -57,6 +73,18 @@ export interface ObjetoConVolumen extends Objeto {
   volumenTotalM3: number
 }
 
+export interface MovimientoResponse {
+  id: number
+  tipo: TipoMovimiento
+  objetoId: number
+  objetoNombre: string
+  bodegaId: number
+  bodegaNombre: string
+  cantidad: number
+  observaciones: string | null
+  fechaMovimiento: string
+}
+
 export interface Movimiento {
   id: number
   tipo: TipoMovimiento
@@ -66,6 +94,19 @@ export interface Movimiento {
   observaciones: string | null
   registradoPor: string | null
   fechaMovimiento: string
+}
+
+export interface ContratoResponse {
+  id: number
+  usuarioId: string
+  usuarioNombre: string
+  bodegaId: number
+  bodegaNombre: string
+  fechaInicio: string
+  fechaFin: string
+  canonMensual: number
+  activo: boolean
+  urlDocumento: string | null
 }
 
 export interface Contrato {
@@ -114,6 +155,9 @@ export interface DashboardAdmin {
   bodegasEnUso: number
   bodegasReservadas: number
   ocupacionGlobalPorcentaje: number
+  ingresosMensuales: number
+  clientesActivos: number
+  topProductos: ObjetoResponse[]
 }
 
 export interface DashboardUsuario {
@@ -122,7 +166,9 @@ export interface DashboardUsuario {
   volumenOcupadoM3: number
   volumenTotalM3: number
   porcentajeOcupacionUsuario: number
-  ultimosMovimientos: Movimiento[]
+  ultimosMovimientos: MovimientoResponse[]
+  alertasStock: ObjetoResponse[]
+  bodegasCercanasLimite: Bodega[]
 }
 
 export interface ApiResponse<T> {

@@ -6,6 +6,7 @@ import com.bodega.gestion.entity.*;
 import com.bodega.gestion.enums.EstadoBodega;
 import com.bodega.gestion.exception.*;
 import com.bodega.gestion.repository.*;
+import com.bodega.gestion.security.SupabaseJwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,22 @@ public class ContratoController {
     private final ContratoRepository contratoRepository;
     private final UsuarioRepository usuarioRepository;
     private final BodegaRepository bodegaRepository;
+    private final SupabaseJwtService jwtService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
     public List<ContratoResponse> listarTodos() {
         return contratoRepository.findAllWithRelations().stream().map(ContratoResponse::from).toList();
+    }
+
+    @GetMapping("/mis-contratos")
+    @Transactional(readOnly = true)
+    public List<ContratoResponse> misContratos(
+            @RequestHeader("Authorization") String bearerToken) {
+        var usuarioId = jwtService.extractUserId(bearerToken.substring(7));
+        return contratoRepository.findMisContratosActivos(usuarioId)
+                .stream().map(ContratoResponse::from).toList();
     }
 
     @GetMapping("/proximos-vencer")
@@ -51,7 +62,6 @@ public class ContratoController {
         Bodega bodega = bodegaRepository.findById(req.getBodegaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bodega no encontrada"));
 
-        // Cambiar estado de la bodega
         bodega.setEstado(EstadoBodega.EN_USO);
         bodegaRepository.save(bodega);
 
