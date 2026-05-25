@@ -1,0 +1,8 @@
+frontend/
+frontend/node_modules/
+node_modules/
+backend/target/
+.git/
+.github/
+*.md
+supabase/
