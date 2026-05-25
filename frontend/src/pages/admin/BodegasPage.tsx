@@ -3,7 +3,8 @@ import { Layout } from '../../components/layout/Layout'
 import { bodegaApi } from '../../api/services'
 import type { Bodega } from '../../types'
 import { Link } from 'react-router-dom'
-import { Plus, Warehouse } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { useToast } from '../../components/ui/ToastProvider'
 
 const estadoColors: Record<string, string> = {
   LIBRE: 'badge-success',
@@ -38,6 +39,7 @@ export function BodegasPage() {
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ nombre: '', ubicacion: '', capacidadM3: '', descripcion: '', estado: 'LIBRE' })
+  const toast = useToast()
 
   const loadBodegas = () => {
     setLoading(true)
@@ -63,8 +65,9 @@ export function BodegasPage() {
       setShowForm(false)
       setForm({ nombre: '', ubicacion: '', capacidadM3: '', descripcion: '', estado: 'LIBRE' })
       loadBodegas()
+      toast.success('Bodega creada exitosamente')
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Error al crear bodega')
+      toast.error(err.response?.data?.error || 'Error al crear bodega')
     }
   }
 
@@ -73,8 +76,9 @@ export function BodegasPage() {
     try {
       await bodegaApi.eliminar(id)
       loadBodegas()
+      toast.success('Bodega eliminada exitosamente')
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Error al eliminar')
+      toast.error(err.response?.data?.error || 'Error al eliminar')
     }
   }
 
@@ -82,7 +86,7 @@ export function BodegasPage() {
     <Layout>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700 }}><Warehouse size={24} style={{ display: 'inline', verticalAlign: 'middle' }} /> Bodegas</h1>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.025em' }}>Bodegas</h1>
           <p className="text-secondary" style={{ fontSize: '0.875rem' }}>Gestión de infraestructura</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>

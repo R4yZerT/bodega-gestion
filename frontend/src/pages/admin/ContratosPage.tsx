@@ -3,6 +3,7 @@ import { Layout } from '../../components/layout/Layout'
 import { contratoApi, bodegaApi } from '../../api/services'
 import type { ContratoResponse, Bodega } from '../../types'
 import { FileText, Plus } from 'lucide-react'
+import { useToast } from '../../components/ui/ToastProvider'
 
 export function ContratosPage() {
   const [contratos, setContratos] = useState<ContratoResponse[]>([])
@@ -16,6 +17,7 @@ export function ContratosPage() {
     canonMensual: '',
   })
   const [bodegas, setBodegas] = useState<Bodega[]>([])
+  const toast = useToast()
 
 const [error, setError] = useState<string | null>(null)
 
@@ -46,8 +48,9 @@ const [error, setError] = useState<string | null>(null)
       setShowForm(false)
       setForm({ usuarioId: '', bodegaId: '', fechaInicio: '', fechaFin: '', canonMensual: '' })
       loadContratos()
+      toast.success('Contrato creado exitosamente')
     } catch (err: any) {
-      alert(err.response?.data?.error || err.response?.data?.message || 'Error al crear contrato')
+      toast.error(err.response?.data?.error || err.response?.data?.message || 'Error al crear contrato')
     }
   }
 
@@ -56,8 +59,9 @@ const [error, setError] = useState<string | null>(null)
     try {
       await contratoApi.terminar(id)
       loadContratos()
+      toast.success('Contrato terminado exitosamente')
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Error al terminar contrato')
+      toast.error(err.response?.data?.error || 'Error al terminar contrato')
     }
   }
 

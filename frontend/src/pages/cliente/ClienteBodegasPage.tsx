@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Layout } from '../../components/layout/Layout'
 import { contratoApi, bodegaApi, zonaApi } from '../../api/services'
-import type { ContratoResponse, Bodega, Zona, ObjetoResponse } from '../../types'
+import type { ContratoResponse, Bodega, Zona } from '../../types'
 import { Warehouse, MapPin, LayoutGrid } from 'lucide-react'
 
 function BarraOcupacion({ porcentaje }: { porcentaje: number }) {
@@ -19,52 +19,82 @@ function BarraOcupacion({ porcentaje }: { porcentaje: number }) {
   )
 }
 
-function PlanoBodega({ zonas, width, height }: { zonas: Zona[]; width: number; height: number }) {
+function OcupacionBadge({ pct }: { pct: number }) {
+  const bg = pct > 90 ? '#fef2f2' : pct > 70 ? '#fffbeb' : '#f0fdf4'
+  const fg = pct > 90 ? '#dc2626' : pct > 70 ? '#d97706' : '#16a34a'
+  return (
+    <span style={{ fontSize: '0.6rem', fontWeight: 600, color: fg, background: bg, borderRadius: 3, padding: '0 3px', whiteSpace: 'nowrap' }}>
+      {pct.toFixed(0)}%
+    </span>
+  )
+}
+
+function PlanoBodega({ zonas }: { zonas: Zona[] }) {
   if (zonas.length === 0) return null
+
   const maxX = Math.max(...zonas.map(z => z.posicionX + z.ancho), 1)
   const maxY = Math.max(...zonas.map(z => z.posicionY + z.alto), 1)
-  const escalaX = width / maxX
-  const escalaY = height / maxY
-  const escala = Math.min(escalaX, escalaY)
 
   return (
     <div style={{
-      position: 'relative',
       width: '100%',
-      height: 200,
       background: '#f1f5f9',
-      borderRadius: 8,
+      borderRadius: 12,
       border: '1px solid var(--border)',
-      overflow: 'hidden',
+      padding: 8,
+      boxSizing: 'border-box',
     }}>
-      {zonas.map(z => {
-        const pct = z.porcentajeOcupacion || 0
-        const color = pct > 90 ? 'rgba(239,68,68,0.6)' : pct > 70 ? 'rgba(245,158,11,0.6)' : 'rgba(34,197,94,0.5)'
-        return (
-          <div key={z.id} title={`${z.nombre}: ${pct.toFixed(1)}%`}
-            style={{
-              position: 'absolute',
-              left: z.posicionX * escala,
-              top: z.posicionY * escala,
-              width: z.ancho * escala - 2,
-              height: z.alto * escala - 2,
-              background: color,
-              borderRadius: 3,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.65rem',
-              fontWeight: 600,
-              color: '#1e293b',
-              overflow: 'hidden',
-              border: '1px solid rgba(0,0,0,0.15)',
-              cursor: 'pointer',
-            }}
-          >
-            {z.ancho * escala > 40 ? z.nombre : ''}
-          </div>
-        )
-      })}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${maxX}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${maxY}, minmax(36px, 1fr))`,
+        gap: 4,
+        maxHeight: 320,
+        overflow: 'auto',
+      }}>
+        {zonas.map(z => {
+          const pct = z.porcentajeOcupacion || 0
+          const bgColor = pct > 90 ? '#fee2e2' : pct > 70 ? '#fef3c7' : '#dcfce7'
+          const borderColor = pct > 90 ? '#fecaca' : pct > 70 ? '#fde68a' : '#bbf7d0'
+
+          return (
+            <div key={z.id}
+              title={`${z.nombre}: ${pct.toFixed(1)}% ocupado`}
+              style={{
+                gridColumn: `${z.posicionX + 1} / span ${z.ancho}`,
+                gridRow: `${z.posicionY + 1} / span ${z.alto}`,
+                background: bgColor,
+                borderRadius: 6,
+                border: `2px solid ${borderColor}`,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 2,
+                padding: '2px 6px',
+                cursor: 'default',
+                minHeight: 0,
+                minWidth: 0,
+              }}
+            >
+              <span style={{
+                fontSize: '0.68rem',
+                fontWeight: 600,
+                color: '#1e293b',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '100%',
+              }}>
+                {z.nombre}
+              </span>
+              <OcupacionBadge pct={pct} />
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -111,8 +141,8 @@ export function ClienteBodegasPage() {
   return (
     <Layout>
       <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700 }}>
-          <Warehouse size={24} style={{ display: 'inline', verticalAlign: 'middle' }} /> Mis Bodegas
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.025em' }}>
+          Mis Bodegas
         </h1>
         <p className="text-secondary" style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>
           Información de las bodegas que tienes asignadas.
@@ -138,14 +168,14 @@ export function ClienteBodegasPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
                   <div style={{ flex: 1, minWidth: 250 }}>
                     <h3 style={{ fontSize: '1.125rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Warehouse size={18} />
+                      <Warehouse size={20} color="var(--primary)" style={{ flexShrink: 0 }} />
                       {b?.nombre || `Bodega #${c.bodegaId}`}
                       <span className={`badge ${b?.estado === 'LIBRE' ? 'badge-success' : b?.estado === 'EN_USO' ? 'badge-info' : 'badge-warning'}`}>
                         {b?.estado === 'LIBRE' ? 'Libre' : b?.estado === 'EN_USO' ? 'En Uso' : 'Reservada'}
                       </span>
                     </h3>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                      <MapPin size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> {b?.ubicacion || 'Sin ubicación'}
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                      <MapPin size={14} style={{ flexShrink: 0 }} /> {b?.ubicacion || 'Sin ubicación'}
                     </p>
                     <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                       <div>
@@ -188,19 +218,47 @@ export function ClienteBodegasPage() {
                         <LayoutGrid size={16} color="var(--text-secondary)" />
                         <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Plano de Zonas</span>
                       </div>
-                      <PlanoBodega zonas={zs} width={400} height={200} />
-                      <div style={{ marginTop: '0.75rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        {zs.map(z => (
-                          <div key={z.id} style={{
-                            padding: '0.25rem 0.75rem',
-                            background: 'var(--bg-primary)',
-                            borderRadius: 'var(--radius)',
-                            fontSize: '0.75rem',
-                            border: '1px solid var(--border)',
-                          }}>
-                            {z.nombre}: {z.porcentajeOcupacion?.toFixed(0) || 0}%
-                          </div>
-                        ))}
+                      <PlanoBodega zonas={zs} />
+                      <div style={{
+                        marginTop: '0.75rem',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                        gap: '0.375rem',
+                      }}>
+                        {zs.map(z => {
+                          const pct = z.porcentajeOcupacion || 0
+                          const dotColor = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#22c55e'
+                          return (
+                            <div key={z.id} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.375rem',
+                              padding: '0.3rem 0.6rem',
+                              background: 'var(--bg-primary)',
+                              borderRadius: 6,
+                              fontSize: '0.75rem',
+                              fontWeight: 500,
+                              border: '1px solid var(--border)',
+                            }}>
+                              <span style={{
+                                width: 8, height: 8, borderRadius: '50%',
+                                background: dotColor, flexShrink: 0,
+                              }} />
+                              <span style={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                flex: 1,
+                              }}>{z.nombre}</span>
+                              <span style={{
+                                fontWeight: 600,
+                                color: '#475569',
+                                fontSize: '0.7rem',
+                                whiteSpace: 'nowrap',
+                              }}>{pct.toFixed(0)}%</span>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   )}

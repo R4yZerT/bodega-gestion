@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts'
 import { ProtectedRoute, PublicRoute } from './components/ui/ProtectedRoute'
+import { ToastProvider } from './components/ui/ToastProvider'
 import './styles/global.css'
 
 // Lazy loaded pages
@@ -22,6 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ToastProvider>
         <Suspense fallback={<div className="flex h-screen w-screen items-center justify-center">Cargando...</div>}>
           <Routes>
             <Route
@@ -116,6 +118,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   )

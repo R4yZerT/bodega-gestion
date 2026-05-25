@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts'
-import { LogOut, Warehouse, User, Shield, FileText, ClipboardList } from 'lucide-react'
+import { LogOut, Package, User, Shield, FileText, ClipboardList } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -35,7 +35,7 @@ export function Layout({ children }: LayoutProps) {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Warehouse size={28} color="var(--primary)" />
+            <Package size={28} color="var(--primary)" />
             <span
               style={{
                 fontSize: '1.25rem',
@@ -54,7 +54,7 @@ export function Layout({ children }: LayoutProps) {
                   <Shield size={16} /> Admin
                 </Link>
                 <Link to="/admin/bodegas" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
-                  <Warehouse size={16} /> Bodegas
+                  <Package size={16} /> Bodegas
                 </Link>
                 <Link to="/admin/contratos" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
                   <FileText size={16} /> Contratos
@@ -71,7 +71,7 @@ export function Layout({ children }: LayoutProps) {
             )}
             {!isAdmin && !isSeguridad && (
               <Link to="/cliente" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
-                <Warehouse size={16} /> Mis Bodegas
+                <Package size={16} /> Mis Bodegas
               </Link>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>

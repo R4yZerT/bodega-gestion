@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts'
 import { Layout } from '../../components/layout/Layout'
 import { dashboardApi } from '../../api/services'
 import type { DashboardAdmin } from '../../types'
-import { Warehouse, TrendingUp, DollarSign, Users, AlertCircle, Package } from 'lucide-react'
+import { TrendingUp, DollarSign, Users, AlertCircle, Package } from 'lucide-react'
 
 export function AdminDashboard() {
   const { perfil } = useAuth()
@@ -47,7 +47,7 @@ export function AdminDashboard() {
       <div className="grid grid-4">
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Warehouse size={20} color="var(--primary)" />
+            <Package size={20} color="var(--primary)" />
             <span className="stat-label">Total Bodegas</span>
           </div>
           <div className="stat-value">{data.totalBodegas}</div>

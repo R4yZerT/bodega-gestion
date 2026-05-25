@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../contexts'
-import { Warehouse, LogIn, UserPlus } from 'lucide-react'
+import { Package, LogIn, UserPlus } from 'lucide-react'
 
 export function LoginPage() {
   const { signIn, signUp } = useAuth()
@@ -41,7 +41,7 @@ export function LoginPage() {
     >
       <div className="card" style={{ maxWidth: '420px', width: '100%', margin: '0 1rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <Warehouse size={48} color="var(--primary)" />
+          <Package size={48} color="var(--primary)" />
           <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '0.75rem' }}>
             BodegaGestión
           </h1>

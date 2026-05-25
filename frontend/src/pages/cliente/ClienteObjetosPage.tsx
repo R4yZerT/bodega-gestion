@@ -3,6 +3,7 @@ import { Layout } from '../../components/layout/Layout'
 import { objetoApi, contratoApi } from '../../api/services'
 import type { ObjetoResponse, Bodega, ContratoResponse } from '../../types'
 import { Plus, Package, Pencil, Trash2 } from 'lucide-react'
+import { useToast } from '../../components/ui/ToastProvider'
 
 export function ClienteObjetosPage() {
   const [objetos, setObjetos] = useState<ObjetoResponse[]>([])
@@ -11,6 +12,7 @@ export function ClienteObjetosPage() {
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState<number | null>(null)
   const [bodegas, setBodegas] = useState<Bodega[]>([])
+  const toast = useToast()
   const [form, setForm] = useState({
     nombre: '',
     cantidad: '1',
@@ -86,8 +88,9 @@ export function ClienteObjetosPage() {
       }
       resetForm()
       loadObjetos()
+      toast.success(editing ? 'Objeto actualizado exitosamente' : 'Objeto creado exitosamente')
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Error al guardar objeto')
+      toast.error(err.response?.data?.error || 'Error al guardar objeto')
     }
   }
 
@@ -110,8 +113,9 @@ export function ClienteObjetosPage() {
     try {
       await objetoApi.eliminar(id)
       loadObjetos()
+      toast.success('Objeto eliminado exitosamente')
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Error al eliminar')
+      toast.error(err.response?.data?.error || 'Error al eliminar')
     }
   }
 
