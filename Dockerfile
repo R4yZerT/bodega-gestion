@@ -11,4 +11,10 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/gestion-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", \
+  "-Xmx256m", \
+  "-Xms64m", \
+  "-XX:+UseSerialGC", \
+  "-XX:MaxMetaspaceSize=96m", \
+  "-Xss512k", \
+  "-jar", "app.jar"]
