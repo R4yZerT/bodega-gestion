@@ -7,6 +7,7 @@ import com.bodega.gestion.service.ObjetoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,6 +18,12 @@ public class ObjetoController {
 
     private final ObjetoService objetoService;
     private final SupabaseJwtService jwtService;
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SEGURIDAD')")
+    public List<ObjetoResponse> listarTodos() {
+        return objetoService.listarTodos();
+    }
 
     @GetMapping("/bodega/{bodegaId}")
     public List<ObjetoResponse> listarPorBodega(@PathVariable Long bodegaId) {
@@ -38,6 +45,7 @@ public class ObjetoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SEGURIDAD')")
     public ResponseEntity<ObjetoResponse> crear(
             @Valid @RequestBody ObjetoRequest request,
             @RequestHeader("Authorization") String bearerToken) {
@@ -46,6 +54,7 @@ public class ObjetoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SEGURIDAD')")
     public ObjetoResponse actualizar(
             @PathVariable Long id,
             @Valid @RequestBody ObjetoRequest request,
@@ -55,6 +64,7 @@ public class ObjetoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SEGURIDAD')")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id,
             @RequestHeader("Authorization") String bearerToken) {

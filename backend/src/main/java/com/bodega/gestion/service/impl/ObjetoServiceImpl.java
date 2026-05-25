@@ -118,4 +118,11 @@ public class ObjetoServiceImpl implements ObjetoService {
         return objetoRepository.findObjetosBajoStockMinimo(usuarioId)
                 .stream().map(ObjetoResponse::from).toList();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ObjetoResponse> listarTodos() {
+        return objetoRepository.findAll()
+                .stream().map(ObjetoResponse::from).toList();
+    }
 }

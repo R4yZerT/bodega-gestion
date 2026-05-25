@@ -1,29 +1,17 @@
 package com.bodega.gestion.dto.request;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class AccesoPersonaRequest {
-    @NotBlank(message = "El nombre es obligatorio")
-    private String nombrePersona;
-
-    @NotBlank(message = "La identificación es obligatoria")
-    private String identificacion;
-
-    @NotNull(message = "La bodega es obligatoria")
-    private Long bodegaId;
-
-    private String observaciones;
-
-    private List<ItemAcceso> items = new ArrayList<>();
+public class SalidaRequest {
+    private List<ItemSalida> items = new ArrayList<>();
 
     @Data
-    public static class ItemAcceso {
+    public static class ItemSalida {
         @NotNull(message = "El objeto es obligatorio")
         private Long objetoId;
 

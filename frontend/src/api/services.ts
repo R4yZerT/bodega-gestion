@@ -9,6 +9,7 @@ import type {
   ContratoResponse,
   Categoria,
   AccesoPersona,
+  AccesoObjeto,
   Usuario,
   DashboardAdmin,
   DashboardUsuario,
@@ -54,6 +55,7 @@ export const objetoApi = {
   misObjetos: () => api.get<ObjetoResponse[]>('/objetos/mis-objetos'),
   porBodega: (bodegaId: number) => api.get<ObjetoResponse[]>(`/objetos/bodega/${bodegaId}`),
   alertasStock: () => api.get<ObjetoResponse[]>('/objetos/alertas-stock'),
+  listarTodos: () => api.get<ObjetoResponse[]>('/objetos'),
   crear: (data: Partial<Objeto>) => api.post<ObjetoResponse>('/objetos', data),
   actualizar: (id: number, data: Partial<Objeto>) => api.put<ObjetoResponse>(`/objetos/${id}`, data),
   eliminar: (id: number) => api.delete(`/objetos/${id}`),
@@ -85,10 +87,18 @@ export const contratoApi = {
 // Accesos (Seguridad)
 // ============================
 export const accesoApi = {
-  registrarEntrada: (data: Partial<AccesoPersona>) =>
+  registrarEntrada: (data: {
+    nombrePersona: string
+    identificacion: string
+    bodegaId: number
+    observaciones?: string
+    items?: { objetoId: number; cantidad: number }[]
+  }) =>
     api.post<AccesoPersona>('/accesos/entrada', data),
-  registrarSalida: (id: number) => api.patch<AccesoPersona>(`/accesos/${id}/salida`),
+  registrarSalida: (id: number, data?: { items?: { objetoId: number; cantidad: number }[] }) =>
+    api.patch<AccesoPersona>(`/accesos/${id}/salida`, data || {}),
   porBodega: (bodegaId: number) => api.get<AccesoPersona[]>(`/accesos/bodega/${bodegaId}`),
+  objetosPorAcceso: (accesoId: number) => api.get<AccesoObjeto[]>(`/accesos/${accesoId}/objetos`),
   historialPersona: (identificacion: string) =>
     api.get<AccesoPersona[]>(`/accesos/persona/${identificacion}`),
 }

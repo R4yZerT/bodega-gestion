@@ -22,8 +22,17 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
     return <Navigate to="/login" replace />
   }
 
-  if (roles && perfil && !roles.includes(perfil.rol)) {
-    return <Navigate to="/unauthorized" replace />
+  if (roles) {
+    if (!perfil) {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <p>Cargando perfil...</p>
+        </div>
+      )
+    }
+    if (!roles.includes(perfil.rol)) {
+      return <Navigate to="/unauthorized" replace />
+    }
   }
 
   return <>{children}</>

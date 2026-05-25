@@ -7,6 +7,7 @@ import com.bodega.gestion.service.MovimientoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class MovimientoController {
     private final SupabaseJwtService jwtService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SEGURIDAD')")
     public ResponseEntity<MovimientoResponse> registrar(
             @Valid @RequestBody MovimientoRequest request,
             @RequestHeader("Authorization") String bearerToken) {

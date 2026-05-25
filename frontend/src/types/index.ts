@@ -137,6 +137,15 @@ export interface AccesoPersona {
   observaciones: string | null
 }
 
+export interface AccesoObjeto {
+  id: number
+  accesoId: number
+  objetoId: number
+  objetoNombre: string
+  cantidad: number
+  direccion: 'ENTRADA' | 'SALIDA'
+}
+
 export interface AuditLog {
   id: number
   usuarioId: string | null

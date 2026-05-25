@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     try {
       const { data } = await authApi.me()
-      setPerfil(data.data)
+      setPerfil(data)
     } catch {
       setPerfil(null)
     }

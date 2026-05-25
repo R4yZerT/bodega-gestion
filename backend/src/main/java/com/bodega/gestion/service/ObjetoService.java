@@ -12,4 +12,5 @@ public interface ObjetoService {
     List<ObjetoResponse> listarPorBodega(Long bodegaId);
     List<ObjetoResponse> listarPorUsuario(UUID usuarioId);
     List<ObjetoResponse> listarBajoStockMinimo(UUID usuarioId);
+    List<ObjetoResponse> listarTodos();
 }

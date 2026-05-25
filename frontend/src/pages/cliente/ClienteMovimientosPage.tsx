@@ -1,29 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Layout } from '../../components/layout/Layout'
 import { movimientoApi, objetoApi } from '../../api/services'
-import type { MovimientoResponse, ObjetoResponse } from '../../types'
-import { ArrowDownToLine, ArrowUpFromLine, Package, History } from 'lucide-react'
+import type { MovimientoResponse } from '../../types'
+import { ArrowDownToLine, ArrowUpFromLine, History, FileText } from 'lucide-react'
 
 export function ClienteMovimientosPage() {
   const [movimientos, setMovimientos] = useState<MovimientoResponse[]>([])
-  const [objetos, setObjetos] = useState<ObjetoResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [mensaje, setMensaje] = useState<{ texto: string; tipo: 'success' | 'error' } | null>(null)
-  const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({
-    tipo: 'ENTRADA',
-    objetoId: '',
-    cantidad: '1',
-    observaciones: '',
-  })
 
   const loadData = () => {
     setLoading(true)
     setError(null)
-    Promise.all([objetoApi.misObjetos()])
-      .then(([objRes]) => {
-        setObjetos(objRes.data)
+    objetoApi.misObjetos()
+      .then((objRes) => {
         if (objRes.data.length === 0) {
           setMovimientos([])
           setLoading(false)
@@ -43,37 +33,7 @@ export function ClienteMovimientosPage() {
       .finally(() => setLoading(false))
   }
 
-  const loadObjetos = () => {
-    objetoApi.misObjetos()
-      .then((res) => setObjetos(res.data))
-      .catch(() => {})
-  }
-
-  useEffect(() => {
-    loadData()
-    loadObjetos()
-  }, [])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await movimientoApi.registrar({
-        tipo: form.tipo,
-        objetoId: parseInt(form.objetoId),
-        cantidad: parseInt(form.cantidad),
-        observaciones: form.observaciones || undefined,
-      })
-      setMensaje({ texto: 'Movimiento registrado correctamente', tipo: 'success' })
-      setShowForm(false)
-      setForm({ tipo: 'ENTRADA', objetoId: '', cantidad: '1', observaciones: '' })
-      loadData()
-      loadObjetos()
-      setTimeout(() => setMensaje(null), 3000)
-    } catch (err: any) {
-      setMensaje({ texto: err.response?.data?.error || 'Error al registrar movimiento', tipo: 'error' })
-      setTimeout(() => setMensaje(null), 5000)
-    }
-  }
+  useEffect(() => { loadData() }, [])
 
   const formatoFecha = (f: string) => new Date(f).toLocaleString('es-CO')
 
@@ -85,55 +45,13 @@ export function ClienteMovimientosPage() {
             <History size={24} style={{ display: 'inline', verticalAlign: 'middle' }} /> Movimientos
           </h1>
           <p className="text-secondary" style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>
-            Historial de movimientos de tus objetos.
+            Historial de entradas y salidas de tus objetos.
           </p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-          <Package size={16} /> Registrar Movimiento
-        </button>
+        <span className="badge badge-info" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', padding: '0.5rem 0.75rem' }}>
+          <FileText size={14} /> Solo lectura
+        </span>
       </div>
-
-      {mensaje && (
-        <div className={`card mb-3`} style={{ borderColor: mensaje.tipo === 'success' ? 'var(--success)' : 'var(--danger)', background: mensaje.tipo === 'success' ? '#f0fdf4' : '#fef2f2' }}>
-          <p className={mensaje.tipo === 'success' ? 'text-success' : 'text-danger'}>{mensaje.texto}</p>
-        </div>
-      )}
-
-      {showForm && (
-        <div className="card mb-3">
-          <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Registrar Movimiento</h3>
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-2">
-              <div>
-                <label className="label">Tipo *</label>
-                <select className="input" required value={form.tipo} onChange={e => setForm({ ...form, tipo: e.target.value })}>
-                  <option value="ENTRADA">Entrada (ingreso)</option>
-                  <option value="SALIDA">Salida (retiro)</option>
-                </select>
-              </div>
-              <div>
-                <label className="label">Objeto *</label>
-                <select className="input" required value={form.objetoId} onChange={e => setForm({ ...form, objetoId: e.target.value })}>
-                  <option value="">Seleccionar objeto</option>
-                  {objetos.map(o => <option key={o.id} value={o.id}>{o.nombre} ({o.bodegaNombre}, stock: {o.cantidad})</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="label">Cantidad *</label>
-                <input className="input" type="number" min="1" required value={form.cantidad} onChange={e => setForm({ ...form, cantidad: e.target.value })} />
-              </div>
-              <div>
-                <label className="label">Observaciones</label>
-                <input className="input" value={form.observaciones} onChange={e => setForm({ ...form, observaciones: e.target.value })} />
-              </div>
-            </div>
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
-              <button className="btn btn-primary" type="submit">Registrar</button>
-              <button className="btn btn-secondary" type="button" onClick={() => setShowForm(false)}>Cancelar</button>
-            </div>
-          </form>
-        </div>
-      )}
 
       {loading ? <p>Cargando...</p> : error ? (
         <div className="card" style={{ borderColor: 'var(--danger)' }}>

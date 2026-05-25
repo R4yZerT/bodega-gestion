@@ -18,6 +18,7 @@ const ClienteObjetosPage = React.lazy(() => import('./pages/cliente/ClienteObjet
 const ClienteMovimientosPage = React.lazy(() => import('./pages/cliente/ClienteMovimientosPage').then(module => ({ default: module.ClienteMovimientosPage })))
 const ClienteBodegasPage = React.lazy(() => import('./pages/cliente/ClienteBodegasPage').then(module => ({ default: module.ClienteBodegasPage })))
 const SeguridadDashboard = React.lazy(() => import('./pages/seguridad/SeguridadDashboard').then(module => ({ default: module.SeguridadDashboard })))
+const SeguridadInventarioPage = React.lazy(() => import('./pages/seguridad/SeguridadInventarioPage').then(module => ({ default: module.SeguridadInventarioPage })))
 
 function App() {
   return (
@@ -111,6 +112,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['ADMIN', 'SEGURIDAD']}>
                   <SeguridadDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seguridad/inventario"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'SEGURIDAD']}>
+                  <SeguridadInventarioPage />
                 </ProtectedRoute>
               }
             />

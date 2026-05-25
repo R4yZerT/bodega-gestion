@@ -65,9 +65,14 @@ export function Layout({ children }: LayoutProps) {
               </>
             )}
             {isSeguridad && (
-              <Link to="/seguridad" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
-                <Shield size={16} /> Seguridad
-              </Link>
+              <>
+                <Link to="/seguridad" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
+                  <Shield size={16} /> Seguridad
+                </Link>
+                <Link to="/seguridad/inventario" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>
+                  <Package size={16} /> Inventario
+                </Link>
+              </>
             )}
             {!isAdmin && !isSeguridad && (
               <Link to="/cliente" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem' }}>

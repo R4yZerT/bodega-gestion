@@ -52,23 +52,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     Usuario usuario = usuarioRepository.findByEmail(userEmail).orElse(null);
 
                     if (usuario == null) {
+                        // Solo para usuarios nuevos: usar el rol del JWT como valor por defecto.
+                        // Si el JWT no trae rol, se asigna USUARIO.
+                        String jwtRole = role != null ? role : "USUARIO";
                         usuario = Usuario.builder()
                                 .id(userId)
                                 .email(userEmail)
-                                .rol(RolUsuario.valueOf(role))
+                                .rol(RolUsuario.valueOf(jwtRole))
                                 .activo(true)
                                 .build();
                         usuarioRepository.save(usuario);
-                        log.info("Usuario auto-sincronizado desde JWT: {} con rol {}", userEmail, role);
+                        log.info("Usuario auto-sincronizado desde JWT: {} con rol {}", userEmail, jwtRole);
                     } else {
-                        String jwtRole = role != null ? role : "USUARIO";
-                        RolUsuario currentRol = usuario.getRol();
-                        RolUsuario newRol = RolUsuario.valueOf(jwtRole);
-                        if (currentRol != newRol) {
-                            usuario.setRol(newRol);
-                            usuarioRepository.save(usuario);
-                            log.info("Rol actualizado para {} : {} -> {}", userEmail, currentRol, newRol);
-                        }
+                        // Usuario existente: la base de datos local es la fuente de verdad del rol.
+                        // NO sincronizamos desde el JWT para evitar que un token sin app_metadata.role
+                        // sobrescriba el rol asignado por un administrador en la BD local.
+                        log.debug("Usuario existente autenticado: {}, rol local: {}", userEmail, usuario.getRol());
                     }
 
                     UserDetails userDetails = new User(
