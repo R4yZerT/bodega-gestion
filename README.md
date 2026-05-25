@@ -75,7 +75,7 @@ bodega-gestion/
 | **Contratos** | CRUD `/contratos` | Vinculación usuario-bodega |
 | **Accesos** | `/accesos/entrada`, `/accesos/{id}/salida` | Bitácora de personas (RF-10) |
 | **Auditoría** | `/admin/audit` | Logs inmutables (solo Admin) |
-| **Dashboard** | `/dashboard/admin`, `/dashboard/usuario` | Métricas y analítica |
+| **Dashboard** | `/dashboard/admin`, `/dashboard/usuario` | Métricas financieras, ocupación, alertas y analítica |
 
 ## Configuración Inicial
 
@@ -126,13 +126,44 @@ supabase functions deploy notificaciones
 | GET | `/objetos/alertas-stock` | Auth | Objetos bajo stock mínimo |
 | POST | `/movimientos` | Auth | Registrar entrada/salida |
 | GET | `/movimientos/bodega/{id}` | Auth | Trazabilidad por bodega |
+| GET | `/contratos/mis-contratos` | Auth | Mis contratos y bodegas asignadas |
 | POST | `/contratos` | Admin | Crear contrato |
 | PATCH | `/contratos/{id}/terminar` | Admin | Terminar contrato |
 | POST | `/accesos/entrada` | Seguridad | Registrar entrada |
 | PATCH | `/accesos/{id}/salida` | Seguridad | Registrar salida |
-| GET | `/dashboard/admin` | Admin | Dashboard administrativo |
-| GET | `/dashboard/usuario` | Auth | Dashboard del arrendatario |
+| GET | `/dashboard/admin` | Admin | Dashboard con métricas financieras, ocupación, clientes activos |
+| GET | `/dashboard/usuario` | Auth | Dashboard del arrendatario con alertas de stock y capacidad |
 | GET | `/admin/audit` | Admin | Logs de auditoría |
+
+## Funcionalidades por Módulo
+
+### Módulo Administrativo (ADMIN)
+- CRUD de bodegas con visualización de barras de ocupación
+- Gestión de clientes (crear, activar/desactivar, cambiar rol)
+- Administración de contratos (crear, terminar, filtrar por vencer)
+- **Dashboard financiero**: ingresos mensuales, clientes activos, ocupación global
+- **Ranking de productos** que más espacio ocupan
+- Logs de auditoría con filtro por tabla
+
+### Módulo del Cliente (USUARIO)
+- **Dashboard personalizado** con KPIs y alertas
+- **Alertas visuales**: stock bajo mínimo y bodegas >80% de capacidad
+- **Gestión de inventario**: CRUD de objetos con dimensiones, stock mínimo y volumen automático
+- **Registro de movimientos**: entradas/salidas con validación de capacidad
+- **Historial de movimientos** con trazabilidad completa
+- **Visualización de bodegas**: info de contrato, ocupación, canon mensual
+- **Plano digital 2D** de zonas con colores por nivel de ocupación
+
+### Módulo de Seguridad (SEGURIDAD)
+- Registro de entradas/salidas de personas por bodega
+- Historial de accesos por persona
+
+### Lógica de Negocio
+- **Volumen automático:** `Volumen = Largo(cm) × Ancho(cm) × Alto(cm) / 1,000,000` → m³
+- **Validación RF-09:** Al registrar movimientos, se verifica que el volumen total no exceda la capacidad
+- **Estados de bodega:** `LIBRE` → `RESERVADA` → `EN_USO` (transición automática con contratos)
+- **Triggers SQL:** Recálculo automático de volumen ocupado al insertar/actualizar/eliminar objetos
+- **Alertas automáticas:** Stock bajo mínimo y bodegas >80% ocupación visibles en dashboard
 
 ## Flujo de Autenticación
 
@@ -142,10 +173,3 @@ Frontend → POST /auth/sync con JWT → Spring Boot crea/actualiza perfil
 Frontend → Cualquier endpoint con Authorization: Bearer <JWT>
 Spring Boot → Valida JWT con SUPABASE_JWT_SECRET → Autoriza según rol
 ```
-
-## Lógica de Negocio
-
-- **Volumen automático:** `Volumen = Largo(cm) × Ancho(cm) × Alto(cm) / 1,000,000` → m³
-- **Validación RF-09:** Al registrar movimientos, se verifica que el volumen total no exceda la capacidad
-- **Estados de bodega:** `LIBRE` → `RESERVADA` → `EN_USO` (transición automática con contratos)
-- **Triggers SQL:** Recálculo automático de volumen ocupado al insertar/actualizar/eliminar objetos
