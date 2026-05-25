@@ -166,6 +166,7 @@ export interface DashboardAdmin {
   ocupacionGlobalPorcentaje: number
   ingresosMensuales: number
   clientesActivos: number
+  movimientosHoy: number
   topProductos: ObjetoResponse[]
 }
 

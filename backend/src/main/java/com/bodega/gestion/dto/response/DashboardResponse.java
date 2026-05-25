@@ -19,6 +19,7 @@ public class DashboardResponse {
     private BigDecimal ingresosMensuales;
     private Long clientesActivos;
     private List<ObjetoResponse> topProductos;
+    private Long movimientosHoy;
 
     // Usuario
     private Long totalObjetos;

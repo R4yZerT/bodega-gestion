@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -54,6 +57,10 @@ public class DashboardController {
         var topProductos = objetoRepository.findTopByVolumen(PageRequest.of(0, 10))
                 .stream().map(ObjetoResponse::from).toList();
 
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime startOfNextDay = LocalDate.now().plusDays(1).atStartOfDay();
+        Long movimientosHoy = movimientoRepository.countToday(startOfDay, startOfNextDay);
+
         return DashboardResponse.builder()
                 .totalBodegas((long) todasBodegas.size())
                 .bodegasLibres(libres)
@@ -63,6 +70,7 @@ public class DashboardController {
                 .ingresosMensuales(ingresosMensuales)
                 .clientesActivos(clientesActivos)
                 .topProductos(topProductos)
+                .movimientosHoy(movimientosHoy)
                 .build();
     }
 
