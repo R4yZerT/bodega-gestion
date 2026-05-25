@@ -24,7 +24,7 @@ export function SeguridadDashboard() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [accesos, setAccesos] = useState<AccesoPersona[]>([])
-  const [objetosBodega, setObjetosBodega] = useState<ObjetoResponse[]>([])
+  const [_objetosBodega, setObjetosBodega] = useState<ObjetoResponse[]>([])
   const [itemsEntrada, setItemsEntrada] = useState<ItemSeleccionado[]>([])
   const [errorModal, setErrorModal] = useState<{ titulo: string; mensaje: string } | null>(null)
   const [salidaModal, setSalidaModal] = useState<{ acceso: AccesoPersona; objetos: ObjetoResponse[] } | null>(null)

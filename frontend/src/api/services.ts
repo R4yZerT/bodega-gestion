@@ -7,7 +7,6 @@ import type {
   MovimientoResponse,
   Contrato,
   ContratoResponse,
-  Categoria,
   AccesoPersona,
   AccesoObjeto,
   Usuario,

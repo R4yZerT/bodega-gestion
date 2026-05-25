@@ -2,7 +2,7 @@ import { useAuth } from '../../contexts'
 import { Navigate } from 'react-router-dom'
 
 export function DashboardRedirect() {
-  const { perfil, isAdmin, isSeguridad } = useAuth()
+  const { isAdmin, isSeguridad } = useAuth()
 
   if (isAdmin) return <Navigate to="/admin" replace />
   if (isSeguridad) return <Navigate to="/seguridad" replace />

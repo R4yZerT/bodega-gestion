@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Layout } from '../../components/layout/Layout'
 import { bodegaApi } from '../../api/services'
 import type { Bodega } from '../../types'
-import { Link } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { useToast } from '../../components/ui/ToastProvider'
 

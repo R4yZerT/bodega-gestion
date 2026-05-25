@@ -20,12 +20,12 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [perfil, setPerfil] = useState<Usuario | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState<AuthSession | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const syncProfile = async (sessionUser: User | null) => {
+  const syncProfile = async (sessionUser: AuthUser | null) => {
     if (!sessionUser) {
       setPerfil(null)
       return

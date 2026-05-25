@@ -10,12 +10,6 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const { perfil, signOut, isAdmin, isSeguridad } = useAuth()
 
-  const getDashboardPath = () => {
-    if (isAdmin) return '/admin'
-    if (isSeguridad) return '/seguridad'
-    return '/cliente'
-  }
-
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <header
