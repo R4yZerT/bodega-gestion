@@ -63,12 +63,14 @@ VALUES
 -- Actualizar todas las zonas existentes con coordenadas de grid correctas
 -- (evita solapamiento: cada zona tiene posición y tamaño únicos dentro de su bodega)
 
--- Bodega 1 (Central): zonas 1 (A1), 2 (A2), 7 (A3), 12 (A4), 16 (Test)
+-- Bodega 1 (Central): zonas 1 (A1), 2 (A2), 7 (A3), 12 (A4), 16 (Test), 17 (Estantería Alta), 18 (Carga General)
 UPDATE zonas SET posicion_x = 0, posicion_y = 0, ancho = 3, alto = 3 WHERE id = 1;
 UPDATE zonas SET posicion_x = 3, posicion_y = 0, ancho = 3, alto = 3 WHERE id = 2;
 UPDATE zonas SET posicion_x = 0, posicion_y = 3, ancho = 3, alto = 3 WHERE id = 7;
 UPDATE zonas SET posicion_x = 3, posicion_y = 3, ancho = 3, alto = 3 WHERE id = 12;
 UPDATE zonas SET posicion_x = 6, posicion_y = 0, ancho = 3, alto = 3 WHERE id = 16;
+UPDATE zonas SET posicion_x = 0, posicion_y = 6, ancho = 4, alto = 8 WHERE id = 17;
+UPDATE zonas SET posicion_x = 4, posicion_y = 6, ancho = 4, alto = 4 WHERE id = 18;
 
 -- Bodega 2 (Norte): zonas 3 (B1), 8 (B2), 13 (B3), 19 (Unica Flujo)
 UPDATE zonas SET posicion_x = 0, posicion_y = 0, ancho = 4, alto = 4 WHERE id = 3;
