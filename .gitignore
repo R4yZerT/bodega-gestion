@@ -4,6 +4,7 @@
 
 # --- Java/Maven ---
 target/
+backend/target/
 !.mvn/wrapper/maven-wrapper.jar
 *.class
 *.jar
@@ -16,7 +17,7 @@ application-local.yml
 application-local.properties
 
 # --- Node.js / Frontend ---
-frontend/node_modules/
+node_modules/
 frontend/dist/
 frontend/.env
 frontend/.env.local
